@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:site_name" content="">
+<meta property="og:title" content="Attendance Management System" />
+<meta property="og:description" content="This is Attendance Management System" />
+<meta property="og:image" itemprop="image" content="https://myattendancebot.vercel.app/robot">
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://myattendancebot.vercel.app/">
+<link rel="stylesheet" href="./home-output.css">
+  <title>Attendance Management</title>
+  <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+  <div class="container mx-auto p-4">
+    <!-- Header -->
+    <h1 class="text-4xl font-bold text-center mb-8 animate-bounce">Attendance Management System</h1>
+ 
+    <!-- <div class="flex flex-row justify-end my-10 button-flex">
+
+      
+      <button class="bg-blue-600 mx-10">LogOut</button>
+    </div> -->
+    <button id="logout" class="absolute top-4 right-4 px-6 py-2 text-white font-semibold bg-gradient-to-r from-purple-500 to-red-500 hover:from-red-500 hover:to-purple-500 shadow-lg rounded-full transition-all duration-300">
+      Logout
+  </button>
+    <!-- Update Attendance Form -->
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-8 text-black">
+      <h2 class="text-2xl font-semibold mb-4">Update Attendance</h2>
+      <form id="updateForm" class="space-y-4">
+        <div>
+          <label for="subject" class="block text-sm font-medium">Subject</label>
+          <select id="subject" name="subject" class="w-full p-2 border rounded-lg" required>
+            <option value="">Select Subject</option>
+            <option value="24BCA408 - PROFESSIONAL ETHICS">24BCA408 - PROFESSIONAL ETHICS</option>
+          </select>
+        </div>
+        <div>
+          <label for="slotType" class="block text-sm font-medium">Slot Type</label>
+          <select id="slotType" name="slotType" class="w-full p-2 border rounded-lg" required>
+            <option value="">Select Slot Type</option>
+            <option value="Practical">Practical</option>
+            <option value="Theory">Theory</option>
+          </select>
+        </div>
+        <div>
+          <label for="present" class="block text-sm font-medium">Present</label>
+          <input type="number" id="present" name="present" class="w-full p-2 border rounded-lg" placeholder="Enter present count" required>
+        </div>
+        <div>
+          <label for="absent" class="block text-sm font-medium">Absent</label>
+          <input type="number" id="absent" name="absent" class="w-full p-2 border rounded-lg" placeholder="Enter absent count" required>
+        </div>
+        <div>
+          <label for="passwordForUpdate">Enter Password</label>
+          <input type="password" id="passwordForUpdate" name="passwordForUpdate" class="w-full p-2 border rounded-lg" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition duration-300">Update</button>
+      </form>
+    </div>
+
+    <!-- Display Data -->
+    <div id="dataContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+    <!-- Admin Section -->
+    <div class="bg-white p-6 rounded-lg shadow-lg mt-8 text-black">
+      <h2 class="text-2xl font-semibold mb-4">Admin Actions</h2>
+      <div class="space-y-4">
+        <button onclick="openAddModal()" class="w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition duration-300">Add New Subject</button>
+        <button onclick="deleteOneModel()" class="w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition duration-300">Delete One</button>
+        <button onclick="openDeleteModal()" class="w-full bg-red-600 text-white p-2 rounded-lg hover:bg-red-700 transition duration-300">Delete All Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Subject Modal -->
+  <div id="addModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+    <div class="bg-white p-6 rounded-lg w-full max-w-md text-black">
+      <h2 class="text-2xl font-semibold mb-4">Add New Subject</h2>
+      <form id="addForm" class="space-y-4">
+        <input type="number" name="sr" placeholder="Sr. Number" class="w-full p-2 border rounded-lg" required>
+        <input type="text" name="subject" placeholder="Subject Name" class="w-full p-2 border rounded-lg" required>
+        <label for="slotType2">Select Slot Type</label>
+        <select id="slotType2" name="slotType2" class="w-full p-2 border rounded-lg" required>
+          <option value="">Select Slot Type</option>
+          <option value="Practical">Practical</option>
+          <option value="Theory">Theory</option>
+          <option value="Total">Total</option>
+        </select>
+        <input type="number" name="conducted" placeholder="Conducted Classes" class="w-full p-2 border rounded-lg" required>
+        <input type="number" name="present" placeholder="Present" class="w-full p-2 border rounded-lg" required>
+        <input type="number" name="absent" placeholder="Absent" class="w-full p-2 border rounded-lg" required>
+        <input type="text" name="attendancePercentage" placeholder="Attendance Percentage" class="w-full p-2 border rounded-lg" required>
+        <div>
+          <label for="passwordforAddOne">Enter Password</label>
+          <input id="passwordforAddOne" type="password" class="w-full p-2 border rounded-lg" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition duration-300">Add</button>
+      </form>
+      <button onclick="closeAddModal()" class="mt-4 w-full bg-gray-600 text-white p-2 rounded-lg hover:bg-gray-700 transition duration-300">Close</button>
+    </div>
+  </div>
+
+
+  <!-- delete one model -->
+  <div id="deleteone" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+    <div class="bg-white p-6 rounded-lg w-full max-w-md text-black">
+      <h2 class="text-2xl font-semibold mb-4">Delete One Subject</h2>
+      <form id="deleteform" class="space-y-4">
+        <div>
+          <label for="subjectdelete" class="block text-sm font-medium">Subject</label>
+          <select id="subjectdelete" name="subject" class="w-full p-2 border rounded-lg" required>
+            <option value="">Select Subject</option>
+            <option value="24BCA408 - PROFESSIONAL ETHICS">24BCA408 - PROFESSIONAL ETHICS</option>
+          </select>
+        </div>
+        <div>
+          <label for="slotTypeDelete" class="block text-sm font-medium">Slot Type</label>
+          <select id="slotTypeDelete" name="slotType" class="w-full p-2 border rounded-lg" required>
+            <option value="">Select Slot Type</option>
+            <option value="Practical">Practical</option>
+            <option value="Theory">Theory</option>
+          </select>
+        </div>
+        <div>
+          <label for="passwordforDeleteOne">Enter Password</label>
+          <input id="passwordforDeleteOne" type="password" class="w-full p-2 border rounded-lg" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition duration-300">Delete</button>
+      </form>
+      <button id="closedeleteone" onclick="deleteOneModelClose()" class="mt-4 w-full bg-gray-600 text-white p-2 rounded-lg hover:bg-gray-700 transition duration-300">Close</button>
+    </div>
+  </div>
+
+
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+    <div class="bg-white p-6 rounded-lg w-full max-w-md text-black">
+      <h2 class="text-2xl font-semibold mb-4">Delete All Data</h2>
+      <p class="mb-4">Are you sure you want to delete all data? This action cannot be undone.</p>
+      <input type="password" id="adminPassword" placeholder="Enter Admin Password" class="w-full p-2 border rounded-lg mb-4" required>
+      <button onclick="deleteData()" class="w-full bg-red-600 text-white p-2 rounded-lg hover:bg-red-700 transition duration-300">Delete</button>
+      <button onclick="closeDeleteModal()" class="mt-4 w-full bg-gray-600 text-white p-2 rounded-lg hover:bg-gray-700 transition duration-300">Close</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom animations */
+    .fade-in {
+      animation: fadeIn 1s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center p-5">
+  <!-- Header -->
+  <header class="text-center mb-10">
+    <h1 class="text-4xl font-bold text-blue-600">Attendance Management System</h1>
+    <p class="text-gray-600">Manage your attendance effortlessly</p>
+  </header>
+
+  <!-- Display All Data -->
+  <section id="data-cards" class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 fade-in"></section>
+
+  <!-- Update Attendance Form -->
+  <section class="w-full max-w-xl bg-white p-6 rounded-lg shadow-lg mt-8 fade-in">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Update Attendance</h2>
+    <form id="update-form" class="space-y-4">
+      <div>
+        <label for="subject" class="block text-gray-700">Select Subject</label>
+        <select id="subject" class="w-full p-2 border rounded-lg">
+          <!-- Dynamic options here -->
+        </select>
+      </div>
+      <div>
+        <label for="present" class="block text-gray-700">Present</label>
+        <input type="number" id="present" class="w-full p-2 border rounded-lg" placeholder="Number of Present Lectures">
+      </div>
+      <div>
+        <label for="absent" class="block text-gray-700">Absent</label>
+        <input type="number" id="absent" class="w-full p-2 border rounded-lg" placeholder="Number of Absent Lectures">
+      </div>
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Update Attendance</button>
+    </form>
+    <p id="update-message" class="mt-4 text-center"></p>
+  </section>
+
+  <!-- Add Subject Form -->
+  <section class="w-full max-w-xl bg-white p-6 rounded-lg shadow-lg mt-8 fade-in">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Add New Subject</h2>
+    <form id="add-form" class="space-y-4">
+      <div>
+        <label for="sr" class="block text-gray-700">Sr Number</label>
+        <input type="number" id="sr" class="w-full p-2 border rounded-lg" placeholder="Sr Number" required>
+      </div>
+      <div>
+        <label for="new-subject" class="block text-gray-700">Subject Name</label>
+        <input type="text" id="new-subject" class="w-full p-2 border rounded-lg" placeholder="Subject Name" required>
+      </div>
+      <div>
+        <label for="slot-type" class="block text-gray-700">Slot Type</label>
+        <input type="text" id="slot-type" class="w-full p-2 border rounded-lg" placeholder="Theory/Lab" required>
+      </div>
+      <div>
+        <label for="conducted" class="block text-gray-700">Conducted</label>
+        <input type="number" id="conducted" class="w-full p-2 border rounded-lg" placeholder="Total Lectures Conducted" required>
+      </div>
+      <div>
+        <label for="present-add" class="block text-gray-700">Present</label>
+        <input type="number" id="present-add" class="w-full p-2 border rounded-lg" placeholder="Present Lectures" required>
+      </div>
+      <div>
+        <label for="absent-add" class="block text-gray-700">Absent</label>
+        <input type="number" id="absent-add" class="w-full p-2 border rounded-lg" placeholder="Absent Lectures" required>
+      </div>
+      <div>
+        <label for="attendance-percentage" class="block text-gray-700">Attendance Percentage</label>
+        <input type="text" id="attendance-percentage" class="w-full p-2 border rounded-lg" placeholder="Attendance Percentage" required>
+      </div>
+      <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">Add Subject</button>
+    </form>
+    <p id="add-message" class="mt-4 text-center"></p>
+  </section>
+
+  <script>
+    const apiUrl = "https://myattendancebot.vercel.app"; // Replace with your backend base URL
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      await fetchAllData();
+      await populateSubjects();
+    });
+
+    async function fetchAllData() {
+      try {
+        const response = await fetch(`${apiUrl}/all`);
+        const data = await response.json();
+        displayCards(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    function displayCards(data) {
+      const dataCards = document.getElementById("data-cards");
+      dataCards.innerHTML = "";
+      data.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = "bg-white p-4 rounded-lg shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1";
+        card.innerHTML = `
+          <h3 class="text-xl font-bold text-gray-800">${item.Subject}</h3>
+          <p><strong>Slot Type:</strong> ${item.SlotType}</p>
+          <p><strong>Conducted:</strong> ${item.Conducted}</p>
+          <p><strong>Present:</strong> ${item.Present}</p>
+          <p><strong>Absent:</strong> ${item.Absent}</p>
+          <p><strong>Attendance Percentage:</strong> ${item.AttendancePercentage}%</p>
+        `;
+        dataCards.appendChild(card);
+      });
+    }
+
+    async function populateSubjects() {
+      try {
+        const response = await fetch(`${apiUrl}/all`);
+        const data = await response.json();
+        const subjectSelect = document.getElementById("subject");
+        subjectSelect.innerHTML = "";
+        data.forEach((item) => {
+          const option = document.createElement("option");
+          option.value = item.Subject;
+          option.textContent = item.Subject;
+          subjectSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Error populating subjects:", error);
+      }
+    }
+
+    document.getElementById("update-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const subject = document.getElementById("subject").value;
+      const present = document.getElementById("present").value || 0;
+      const absent = document.getElementById("absent").value || 0;
+
+      try {
+        const response = await fetch(`${apiUrl}/up`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ Subject: subject, Present: present, Absent: absent }),
+        });
+        const result = await response.json();
+        const message = document.getElementById("update-message");
+        if (response.ok) {
+          message.textContent = result.mes;
+          message.className = "text-green-600 font-bold";
+          await fetchAllData();
+        } else {
+          message.textContent = "Unable to update data.";
+          message.className = "text-red-600 font-bold";
+        }
+      } catch (error) {
+        console.error("Error updating data:", error);
+      }
+    });
+
+    document.getElementById("add-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const sr = document.getElementById("sr").value;
+      const subject = document.getElementById("new-subject").value;
+      const slotType = document.getElementById("slot-type").value;
+      const conducted = document.getElementById("conducted").value;
+      const present = document.getElementById("present-add").value;
+      const absent = document.getElementById("absent-add").value;
+      const attendancePercentage = document.getElementById("attendance-percentage").value;
+
+      try {
+        const response = await fetch(`${apiUrl}/add`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ Sr: sr, Subject: subject, SlotType: slotType, Conducted: conducted, Present: present, Absent: absent, AttendancePercentage: attendancePercentage }),
+        });
+        const result = await response.json();
+        const message = document.getElementById("add-message");
+        if (response.ok) {
+          message.textContent = "Subject added successfully!";
+          message.className = "text-green-600 font-bold";
+          await fetchAllData();
+          await populateSubjects();
+        } else {
+          message.textContent = "Unable to add data.";
+          message.className = "text-red-600 font-bold";
+        }
+      } catch (error) {
+        console.error("Error adding data:", error);
+      }
+    });
+  </script>
+</body>
+</html>
