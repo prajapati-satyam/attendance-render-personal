@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // const baseUrl = 'https://myattendancebot-vh5p.vercel.app';
 // const baseUrl = 'http://localhost:3000'
-const baseUrl = 'https://attendancebotr.onrender.com'
+const baseUrl = 'https://attendance-render-personal.onrender.com'
 
 // Fetch all data from /all endpoint
 async function fetchData() {
